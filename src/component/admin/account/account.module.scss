@@ -1,0 +1,53 @@
+.account-container {
+  position: relative;
+  width: 100%;
+  .account-items {
+   display: flex;
+   justify-content: center;
+   flex-direction: column;
+   gap: 3rem;
+   width: 50%;
+   margin:5rem auto;
+
+   .form{
+    background-color: #ececec;
+    padding: 1rem;
+    border-radius: 1rem;
+
+
+    h2{
+        text-align: center;
+        margin-bottom: 1rem;
+        font-weight: 500;
+    }
+   }
+
+   .input-field{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    width: 100%;
+    
+    input{
+        padding: 1rem 10px;
+        border: 1px solid gray;
+        border-radius: 10px;
+    }
+   }
+   .btn{
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    margin-top: 1rem;
+   }
+   button{
+    padding: 10px 2rem;
+    
+    background-color: #3f51b5;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+   }
+  }
+}

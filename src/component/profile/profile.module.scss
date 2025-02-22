@@ -1,0 +1,76 @@
+.profile {
+  padding: 3rem 0;
+  margin-bottom: 2rem;
+  color: white !important;
+  min-height: 90vh;
+  .pictureContainer {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    padding: 1rem;
+    background: linear-gradient(294.05deg, #464e7c 1.79%, #001d56 100%);
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 8px;
+    .image {
+      width: 8rem;
+      height: 8rem;
+      border-radius: 50%;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      img {
+        border-radius: 50%;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+  }
+  .profileDetails {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    gap: 2rem;
+    padding: 2rem 0;
+    .box {
+      background-color: #172d62;
+      padding: 1.5rem 3rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      text-align: center;
+      border-radius: 6px;
+
+      h4 {
+        font-weight: 700;
+        margin-bottom: 5px;
+      }
+    }
+  }
+  .profile-actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    width: 100%;
+    padding: 1rem;
+    border: 3px solid #172d62;
+    border-radius: 8px;
+    button {
+      padding: 7px 6rem;
+
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.2s ease-in-out;
+    }
+
+    .active {
+      background-color: #172d62;
+    }
+  }
+}

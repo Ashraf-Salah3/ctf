@@ -1,0 +1,187 @@
+@import url("https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Press+Start+2P&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Kaushan+Script&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inknut+Antiqua:wght@300;400;500;600;700;800;900&display=swap");
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  word-wrap: break-word;
+  word-break: break-word;
+}
+
+:root {
+  --accent: #3b82f6;
+  --accent-hover: #4cd5b5;
+  --btn-color: #1e2753;
+
+  --font-family: "Press Start 2P", serif;
+  --main-transition: 0.3s;
+  --tw-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --tw-shadow-colored: 0 4px 6px -1px var(--tw-shadow-color),
+    0 2px 4px -2px var(--tw-shadow-color);
+  /*box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);*/
+  --font-family: "Press Start 2P", serif;
+  --main-font: "Open Sans", serif;
+  --main-font: Open Sans, Segoe UI, Tahoma, sans-serif;
+  /*background-image: linear-gradient(
+    50deg,
+    var(--e-global-color-btn-red) 0%,
+    var(--e-global-color-dark-icons-background) 38%
+  );*/
+}
+
+body {
+  background: linear-gradient(
+    112.67deg,
+    #0e101b 19.93%,
+    #212433 36.29%,
+    #181f2d 52.01%
+  );
+  background-repeat: no-repeat;
+  width: 100%;
+  background-position: center;
+  background-size: cover;
+  min-height: 100vh;
+  font-family: var(--main-font);
+  scroll-behavior: smooth;
+  
+
+}
+::-webkit-scrollbar {
+  display: none;
+}
+
+ul {
+  list-style: none;
+}
+a {
+  text-decoration: none;
+}
+h3,
+h4 {
+  font-stretch: normal;
+  font-style: normal;
+  font-weight: 400;
+  letter-spacing: normal;
+  line-height: 1.25;
+}
+input {
+  background-color: transparent;
+  outline: none;
+  border: none;
+}
+input:focus {
+  border: none;
+}
+button {
+  font-family: var(--font-family);
+  background-color: transparent;
+  border: none;
+}
+label {
+  color: gray !important;
+}
+
+select,
+select option,
+input,
+textarea {
+  font-family: var(--main-font);
+  background-color: transparent;
+  color: black !important;
+  max-width: 100%;
+  font-size: 20px;
+}
+
+select,
+select option,
+input,
+textarea,
+.--input:focus {
+  outline: none;
+}
+
+select,
+select option,
+input,
+textarea,
+.--input::placeholder {
+  font-size: 12px;
+  color: #bfbfbf;
+}
+label {
+  color: #bfbfbf;
+}
+button {
+  cursor: pointer;
+  font-family: var(--main-font);
+}
+.--btn {
+  font-weight: 500;
+  padding: 0.8rem 0.5rem;
+  border: 1px solid var(--gray-color);
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.3s;
+  font-size: 0.8rem;
+  background-color: #efefef;
+  font-family: var(--main-font);
+}
+.--btn-small {
+  width: 5rem;
+}
+.--btn-primary {
+  background-color: #0095ff;
+  color: var(--section-background);
+  padding: 0.8rem;
+  color: white;
+}
+.--btn-secoundry {
+  background-color: #efefef;
+  border: none;
+}
+.--btn-danger {
+  background-color: red;
+  color: var(--main-background);
+}
+.--btn-action {
+  display: flex;
+  gap: 8px;
+  justify-content: end;
+  margin-top: 2rem;
+}
+.pagination {
+  background-color: #0095ff;
+}
+.container {
+  padding-left: 15px;
+  padding-right: 15px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/*small*/
+@media (min-width: 768px) {
+  .container {
+    width: 750px;
+  }
+}
+
+/*Medium*/
+@media (min-width: 991px) {
+  .container {
+    width: 950px;
+  }
+}
+
+/*large*/
+@media (min-width: 1200px) {
+  .container {
+    width: 1170px;
+  }
+}

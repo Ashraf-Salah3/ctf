@@ -1,0 +1,41 @@
+.notification {
+  padding: 2rem;
+  min-height: 90vh;
+  position: relative;
+  h2 {
+    color: white;
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 30px;
+    font-weight: 400;
+  }
+  .notification-items {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    .notification-content {
+      border: 1px solid red;
+      padding: 10px 1.5rem;
+      color: white;
+      border-radius: 8px;
+      position: relative;
+.desc{
+    border-left: 1px solid red;
+    padding-left: 1cap;
+}
+      h4 {
+        font-size: 20px;
+        font-weight: 500;
+        margin-bottom: 1rem;
+        position: relative;
+        
+      }
+      p {
+        font-size: 16px;
+        margin-left: 10px;
+        display: block;
+      }
+    }
+  }
+}

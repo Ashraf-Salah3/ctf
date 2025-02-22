@@ -1,0 +1,99 @@
+.solved-challenges {
+  width: 100%;
+  margin: 0 auto;
+  position: relative;
+
+
+  .loading{
+    margin: auto;
+    width: 100%;
+    margin-top: 5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+.tableContainer {
+  background-color: transparent !important;
+  border-radius: 10px;
+  border: none;
+  box-shadow: none !important;
+  width: 100%;
+  margin: 0 auto;
+
+  /*.correct {
+    p{
+    background: rgba(52, 199, 89, 0.3);
+    color: green;
+    border-radius: 8px;
+    padding: 10px;
+    text-align: center;
+    }
+  }
+  .inCorrect {
+    p{
+    padding: 10px;
+    color: red;
+    background: rgba(255, 59, 48, 0.3);
+    border-radius: 8px;
+    text-align: center;
+    }
+  }*/
+}
+tbody {
+  box-shadow: none !important;
+}
+.tableContainer .subhead {
+  background-color: transparent;
+  color: white !important;
+}
+.tableContainer .subhead tr th {
+  font-family: var(--main-font);
+  color: var(--accent) !important;
+  border-bottom: none;
+  font-weight: bold;
+  font-size: 18px;
+
+  div{
+    text-align: center;
+  }
+}
+
+.tableContainer .subContent {
+  color: white;
+}
+.tableContainer .subContent td {
+  color: white;
+  font-family: var(--main-font);
+  font-weight: bold;
+
+  border-bottom: none;
+  p{
+    text-align: center;
+  }
+}
+.tableContainer .edit {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+.tableContainer .edit button {
+  color: white;
+  background-color: transparent;
+  padding: 10px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  color: var(--accent);
+  border: 1px solid rgb(219, 219, 219);
+}
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+
+  button {
+    color: white;
+  }
+ 
+}
