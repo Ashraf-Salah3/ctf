@@ -51,7 +51,7 @@ const Profile = () => {
               value: user?.totalScore || 0,
             },
             {
-              icon: <CiTrophy />,
+              icon: <CiTrophy size={30} />,
               title: "Solved",
               value: user?.tottalSolved || 0,
             },

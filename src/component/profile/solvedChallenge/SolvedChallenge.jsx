@@ -15,7 +15,10 @@ import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import styles from "./solved-challenges.module.scss";
-import { fetchUsersSubmissions, setSubmissionFilter } from "../../redux/submissionSlice";
+import {
+  fetchUsersSubmissions,
+  setSubmissionFilter,
+} from "../../redux/submissionSlice";
 import Loading from "../../Loading/Loading";
 
 const SolvedChallenge = () => {
@@ -49,7 +52,7 @@ const SolvedChallenge = () => {
   return (
     <div className={styles["solved-challenges"]}>
       {submissionStatus === "loading" ? (
-        <Loading/>
+        <Loading />
       ) : submissionStatus === "failed" ? (
         <p className={styles.loading}>No Challenges Founded</p>
       ) : submissions.length > 0 ? (
@@ -85,34 +88,51 @@ const SolvedChallenge = () => {
               <TableBody>
                 {submissions?.map((submission, index) => (
                   <TableRow key={index} className={styles["subContent"]}>
-                    <TableCell><p>{submission.challengeName}</p></TableCell>
-                    <TableCell><p>{submission.challengeCategory}</p></TableCell>
-                    <TableCell><p>{submission.pointValue}</p></TableCell>
-                    <TableCell><p>{submission.level}</p></TableCell>
-                    <TableCell><p>{submission.challengeType}</p></TableCell>
-                    <TableCell><p>{convertData(submission)}</p></TableCell>
+                    <TableCell>
+                      <p>{submission.challengeName}</p>
+                    </TableCell>
+                    <TableCell>
+                      <p>{submission.challengeCategory}</p>
+                    </TableCell>
+                    <TableCell>
+                      <p>{submission.pointValue}</p>
+                    </TableCell>
+                    <TableCell>
+                      <p>{submission.level}</p>
+                    </TableCell>
+                    <TableCell>
+                      <p>{submission.challengeType}</p>
+                    </TableCell>
+                    <TableCell>
+                      <p>{convertData(submission)}</p>
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
             </Table>
           </TableContainer>
-          <div className={styles.pagination}>
-            <Stack spacing={2}>
-              <Pagination
-                count={totalPages}
-                page={submissionFilter?.PageIndex || 1}
-                color="primary"
-                onChange={handlePageChange}
-                renderItem={(item) => (
-                  <PaginationItem
-                    sx={{ color: "white" }}
-                    slots={{ previous: ArrowBackIcon, next: ArrowForwardIcon }}
-                    {...item}
-                  />
-                )}
-              />
-            </Stack>
-          </div>
+          {totalPages > 1 && (
+            <div className={styles.pagination}>
+              <Stack spacing={2}>
+                <Pagination
+                  count={totalPages}
+                  page={submissionFilter?.PageIndex || 1}
+                  color="primary"
+                  onChange={handlePageChange}
+                  renderItem={(item) => (
+                    <PaginationItem
+                      sx={{ color: "white" }}
+                      slots={{
+                        previous: ArrowBackIcon,
+                        next: ArrowForwardIcon,
+                      }}
+                      {...item}
+                    />
+                  )}
+                />
+              </Stack>
+            </div>
+          )}
         </div>
       ) : (
         <p className={styles.loading}>No Result Found</p>

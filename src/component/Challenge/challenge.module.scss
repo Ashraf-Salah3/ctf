@@ -19,20 +19,7 @@
 .title{
   margin-bottom: 4rem;
 }
-  h1 {
-    color: white !important;
-    font-size: 25px;
-    padding-bottom: 30px;
-    font-weight: 500;
-    display: flex;
-    justify-content: center;
-    align-items: center;  
-    width: 100%;
-    position: absolute;
-    top: 1rem;
-    left: 50%;
-    transform: translatex(-50%);
-  }
+  
 
   .challenges {
     display: grid;
@@ -202,6 +189,14 @@
           cursor: pointer;
           background-color: transparent;
           display: inline;
+          font-weight: 700;
+          font-size: 15px;
+        }
+        .file{
+          display: flex;
+          align-items: center;
+          gap: 5px;
+          color: var(--accent);
         }
         .hint-btn {
           width: 100%;

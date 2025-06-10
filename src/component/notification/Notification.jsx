@@ -55,7 +55,7 @@ const Notification = () => {
   return (
     <div className={styles.notification}>
       <div className="container">
-        <h2>Notification</h2>
+        <h1 className="main-heading">Notification</h1>
         {notificationStatus === "loading" ? (
          <Loading/>
         ) : notificationStatus === "failed" ? (

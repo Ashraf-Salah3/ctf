@@ -12,7 +12,8 @@ const initialState = {
     SearchName: "",
     Status: "Visible",
     IsSolved: null,
-    UserId: "",
+    UserId: null,
+    IsAccepted:null
   },
   totalPages: 0,
   categories: [],
@@ -54,9 +55,7 @@ const challengeSlice = createSlice({
   initialState,
   reducers: {
     setChallengeFilter: (state, action) => {
-      if (!action.payload.CompetitionId) {
         state.challengeFilter = { ...state.challengeFilter, ...action.payload };
-      }
     },
     resetCompetitionFilter: (state) => {
       state.challengeFilter.CompetitionId = "";

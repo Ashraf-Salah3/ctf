@@ -7,12 +7,9 @@ import {
   TableHead,
   TableRow,
   Paper,
-  Pagination,
-  Stack,
-  PaginationItem,
 } from "@mui/material";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+//import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+//import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { useEffect } from "react";
 import instance from "../../../axios";
 import { toast } from "sonner";
@@ -23,16 +20,16 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchUsers } from "../../redux/usersSlice";
 
 const UsersList = () => {
-  const { users, userFilter, totalPages } = useSelector((state) => state.users);
+  const { users, userFilter,  } = useSelector((state) => state.users);
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(fetchUsers(userFilter));
   }, [dispatch, userFilter]);
 
-  const handlePageChange = (_, page) => {
-    dispatch(fetchUsers({ ...userFilter, PageIndex: page }));
-  };
+  /*const handlePageChange = (_, page) => {
+    dispatch(setUserFilter({ ...userFilter, PageIndex: page }));
+  };*/
 
   const handleDelete = async (id) => {
     try {
@@ -61,7 +58,11 @@ const UsersList = () => {
           }
         );
       } else {
-        await instance.delete(`Account/role?UserId=${id}&Role=CreatorCtf`);
+        await instance.delete(`Account/role?UserId=${id}&Role=CreatorCtf`,{
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+          },
+        });
       }
       dispatch(fetchUsers(userFilter));
     } catch {
@@ -134,7 +135,7 @@ const UsersList = () => {
           </TableBody>
         </Table>
       </TableContainer>
-      <Stack spacing={2}>
+      {/*<Stack spacing={2}>
         <Pagination
           count={totalPages}
           page={userFilter.PageIndex || 1}
@@ -147,7 +148,7 @@ const UsersList = () => {
             />
           )}
         />
-      </Stack>
+      </Stack>*/}
     </div>
   );
 };

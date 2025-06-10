@@ -21,12 +21,14 @@
       align-items: center;
       justify-content: space-between;
       gap: 1rem;
+      width: 100%;
       .input-group {
         width: 100%;
         display: flex;
         gap: 1rem;
         flex: 4;
       }
+
       label {
         color: white !important;
         width: 100%;
@@ -40,7 +42,7 @@
         color: white !important;
       }
       .btn {
-        flex: 1;
+      flex: 1;
       }
       button {
         max-width: 100%;
@@ -53,7 +55,20 @@
         font-size: 15px;
         cursor: pointer;
         transition: background-color 0.2s ease-in-out;
-        margin-top: 1rem;
+        margin-top: 1.5rem;
       }
     }
+  }
+  .form-input{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    width: 100%;
+  }
+  .error-text {
+    color: #b40e0e;
+    font-size: 10px;
+    margin-top: 5px;
+    text-align: left;
+    display: block;
   }

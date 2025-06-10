@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import styles from "./profile-setting.module.scss";
 import instance from "../../../axios";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 import { IoPerson } from "react-icons/io5";
 import { useEffect } from "react";
 import PropTypes from "prop-types";
@@ -32,23 +32,21 @@ const ProfileSetting = ({ user }) => {
   }, [user, reset]);
 
   const handleProfileSubmit = async (data) => {
-    const formData = new FormData()
+    const formData = new FormData();
+
     formData.append("FirstName", data.firstName);
     formData.append("LastName", data.lastName);
 
     try {
+      await instance.put(`Account/${user.id}`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+        },
+      });
 
-      await instance.put(`Account/${user.id}`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-          },
-        }
-      );
-      toast.success("Profile updated successfully");
       reset({ firstName: data.firstName, lastName: data.lastName });
+      toast.success("Profile updated successfully");
     } catch {
       toast.error("Failed to update profile");
     }
@@ -89,9 +87,8 @@ const ProfileSetting = ({ user }) => {
         </div>
         <form onSubmit={handleUpdatedProfile(handleProfileSubmit)}>
           <div className={styles["input-group"]}>
-
-          <label htmlFor="firstName">
-              Frist Name
+            <div className={styles["form-input"]}>
+              <label htmlFor="firstName">Frist Name</label>
               <input
                 type="text"
                 id="firstName"
@@ -99,14 +96,14 @@ const ProfileSetting = ({ user }) => {
                   required: "firstName Name is required",
                 })}
               />
-            </label>
-            {profileErrors.firstName && (
-              <p className={styles["error-text"]}>
-                {profileErrors.firstName.message}
-              </p>
-            )}
-            <label htmlFor="lastName">
-              Last Name
+              {profileErrors.firstName && (
+                <p className={styles["error-text"]}>
+                  {profileErrors.firstName.message}
+                </p>
+              )}
+            </div>
+            <div className={styles["form-input"]}>
+              <label htmlFor="lastName">Last Name</label>
               <input
                 type="text"
                 id="lastName"
@@ -114,14 +111,14 @@ const ProfileSetting = ({ user }) => {
                   required: "Last Name is required",
                 })}
               />
-            </label>
-            {profileErrors.lastName && (
-              <p className={styles["error-text"]}>
-                {profileErrors.lastName.message}
-              </p>
-            )}
-            <label htmlFor="email">
-              Email
+              {profileErrors.lastName && (
+                <p className={styles["error-text"]}>
+                  {profileErrors.lastName.message}
+                </p>
+              )}
+            </div>
+            <div className={styles["form-input"]}>
+              <label htmlFor="email">Email</label>
               <input
                 type="email"
                 readOnly
@@ -130,12 +127,13 @@ const ProfileSetting = ({ user }) => {
                   required: "Email is required",
                 })}
               />
-            </label>
-            {profileErrors.email && (
-              <p className={styles["error-text"]}>
-                {profileErrors.email.message}
-              </p>
-            )}
+
+              {profileErrors.email && (
+                <p className={styles["error-text"]}>
+                  {profileErrors.email.message}
+                </p>
+              )}
+            </div>
           </div>
           <div className={styles["btn"]}>
             <button type="submit">Update Profile</button>
@@ -151,8 +149,8 @@ const ProfileSetting = ({ user }) => {
         </div>
         <form onSubmit={handleChangePassword(handlePasswordSubmit)}>
           <div className={styles["input-group"]}>
-            <label htmlFor="currentPassword">
-              Current Password
+            <div className={styles["form-input"]}>
+              <label htmlFor="currentPassword">Current Password</label>
               <input
                 type="password"
                 id="currentPassword"
@@ -165,9 +163,9 @@ const ProfileSetting = ({ user }) => {
                   {errors.currentPassword.message}
                 </p>
               )}
-            </label>
-            <label htmlFor="newPassword">
-              New Password
+            </div>
+            <div className={styles["form-input"]}>
+              <label htmlFor="newPassword">New Password</label>
               <input
                 type="password"
                 id="newPassword"
@@ -184,9 +182,10 @@ const ProfileSetting = ({ user }) => {
                   {errors.newPassword.message}
                 </p>
               )}
-            </label>
-            <label htmlFor="confirmNewPassword">
-              Confirm New Password
+            </div>
+
+            <div className={styles["form-input"]}>
+              <label htmlFor="confirmNewPassword">Confirm New Password</label>
               <input
                 type="password"
                 id="confirmNewPassword"
@@ -202,7 +201,7 @@ const ProfileSetting = ({ user }) => {
                   {errors.confirmNewPassword.message}
                 </p>
               )}
-            </label>
+            </div>
           </div>
           <div className={styles["btn"]}>
             <button type="submit">Update Password</button>

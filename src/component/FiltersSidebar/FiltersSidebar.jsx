@@ -141,7 +141,7 @@ const FiltersSidebar = () => {
               }`}
               onClick={() => handleCategoryChange(category.id)}
             >
-              {category.name}
+              {category?.name?.toUpperCase()}
             </li>
           ))}
         </ul>

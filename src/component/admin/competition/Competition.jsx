@@ -131,20 +131,24 @@ const Competition = () => {
           </TableBody>
         </Table>
       </TableContainer>
-      <Stack spacing={2}>
-        <Pagination
-          count={totalPages}
-          page={competationFilter?.PageIndex || 1}
-          color="primary"
-          onChange={handlePageChange}
-          renderItem={(item) => (
-            <PaginationItem
-              slots={{ previous: ArrowBackIcon, next: ArrowForwardIcon }}
-              {...item}
+      {totalPages > 1 && (
+        <div className={styles["pagination"]}>
+          <Stack spacing={2}>
+            <Pagination
+              count={totalPages}
+              page={competationFilter?.PageIndex || 1}
+              color="primary"
+              onChange={handlePageChange}
+              renderItem={(item) => (
+                <PaginationItem
+                  slots={{ previous: ArrowBackIcon, next: ArrowForwardIcon }}
+                  {...item}
+                />
+              )}
             />
-          )}
-        />
-      </Stack>
+          </Stack>
+        </div>
+      )}{" "}
     </div>
   );
 };

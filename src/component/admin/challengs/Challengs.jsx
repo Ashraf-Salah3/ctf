@@ -30,25 +30,26 @@ const Challengs = () => {
   const { challenges, challengeFilter, totalPages } = useSelector(
     (state) => state.challenge
   );
+  const nameIdentifier = localStorage.getItem("nameIdentifier");
+
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(fetchChallenges(({ ...challengeFilter, PageSize: 10 })));
-  }, [dispatch, challengeFilter]);
-
+  dispatch(fetchChallenges({ ...challengeFilter, PageSize: 10 , UserId:nameIdentifier}));
+  }, [dispatch, challengeFilter,nameIdentifier]);
 
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this challenge?")) {
       try {
-        await instance.delete(`Challenge/${id}`,{
+        await instance.delete(`Challenge/${id}`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-          }
+          },
         });
         toast.success("Challenge deleted successfully!");
         // Re-fetch challenges with the current filter
-        dispatch(fetchChallenges(challengeFilter));
-      } catch  {
+        dispatch(fetchChallenges({ ...challengeFilter, UserId:nameIdentifier}));
+      } catch {
         toast.error("Failed to delete challenge.");
       }
     }
@@ -58,12 +59,11 @@ const Challengs = () => {
   const handlePageChange = (_, page) => {
     dispatch(setChallengeFilter({ ...challengeFilter, PageIndex: page }));
   };
-  
 
   return (
     <div className={styles["challengs-container"]}>
       <div className="main-header">
-        <h1>Challengs</h1>
+        <h1>Challenges</h1>
         <button onClick={() => navigate("/admin/addChallenge")}>
           <FaPlus />
           Add New
@@ -78,7 +78,7 @@ const Challengs = () => {
           <TableHead className="subhead">
             <TableRow>
               <TableCell>
-                <div>Id</div>
+                <div>User Name</div>
               </TableCell>
               <TableCell>
                 <div>Name</div>
@@ -89,7 +89,6 @@ const Challengs = () => {
               <TableCell>
                 <div>Competation Name</div>
               </TableCell>
-          
               <TableCell>
                 <div>Level</div>
               </TableCell>
@@ -102,7 +101,10 @@ const Challengs = () => {
               <TableCell>
                 <div>State</div>
               </TableCell>
-              <TableCell >
+              <TableCell>
+                <div>Accepted</div>
+              </TableCell>
+              <TableCell>
                 <div>Action</div>
               </TableCell>
             </TableRow>
@@ -110,19 +112,38 @@ const Challengs = () => {
           <TableBody>
             {challenges?.map((challenge, index) => (
               <TableRow key={index} className="subContent">
-                <TableCell><p>{challenge.id}</p></TableCell>
-                <TableCell><p>{challenge.name}</p></TableCell>
-                <TableCell><p>{challenge.categoryName}</p></TableCell>
-                <TableCell><p>{challenge.competationName}</p></TableCell>
-                <TableCell><p>{challenge.level}</p></TableCell>
-                <TableCell><p>{challenge.value}</p></TableCell>
-                <TableCell><p>{challenge.type}</p></TableCell>
-                <TableCell><p>{challenge.status}</p></TableCell>
+                <TableCell>
+                  <p>{challenge.userName}</p>
+                </TableCell>
+                <TableCell>
+                  <p>{challenge.name}</p>
+                </TableCell>
+                <TableCell>
+                  <p>{challenge.categoryName}</p>
+                </TableCell>
+                <TableCell>
+                  <p>{challenge.competationName}</p>
+                </TableCell>
+                <TableCell>
+                  <p>{challenge.level}</p>
+                </TableCell>
+                <TableCell>
+                  <p>{challenge.value}</p>
+                </TableCell>
+                <TableCell>
+                  <p>{challenge.type}</p>
+                </TableCell>
+                <TableCell>
+                  <p>{challenge.status}</p>
+                </TableCell>
+                <TableCell>
+                  <p style={{color : challenge.isAccepted? "green" : "red"}}>{challenge.isAccepted? "Accepted" : "Not Accepted"}</p>
+                </TableCell>
                 <TableCell className="edit">
                   <button
                     className="--btn"
                     onClick={() =>
-                      navigate("/admin/edit-challenge", { state: challenge })
+                      navigate(`/admin/edit-challenge/${challenge.id}`)
                     }
                   >
                     <RiEdit2Fill size={18} />
@@ -139,22 +160,24 @@ const Challengs = () => {
           </TableBody>
         </Table>
       </TableContainer>
-      <div className={styles.pagination}>
-      <Stack spacing={2}>
-      <Pagination
-        count={totalPages}
-        page={challengeFilter?.PageIndex || 1}
-        color="primary"
-        onChange={handlePageChange}
-        renderItem={(item) => (
-          <PaginationItem
-            slots={{ previous: ArrowBackIcon, next: ArrowForwardIcon }}
-            {...item}
-          />
-        )}
-      />
-    </Stack>
-    </div>
+      {totalPages > 1 && (
+        <div className={styles.pagination}>
+          <Stack spacing={2}>
+            <Pagination
+              count={totalPages}
+              page={challengeFilter?.PageIndex || 1}
+              color="primary"
+              onChange={handlePageChange}
+              renderItem={(item) => (
+                <PaginationItem
+                  slots={{ previous: ArrowBackIcon, next: ArrowForwardIcon }}
+                  {...item}
+                />
+              )}
+            />
+          </Stack>
+        </div>
+      )}
     </div>
   );
 };

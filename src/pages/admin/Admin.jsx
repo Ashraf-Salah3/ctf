@@ -1,31 +1,35 @@
-import {  Outlet, useNavigate } from "react-router-dom";
+
+import { Outlet, useNavigate } from "react-router-dom";
 import styles from "./admin.module.scss";
 import SlideBar from "../../component/admin/slideBar/SlideBar";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import Loading from "../../component/Loading/Loading";
 import { fetchUserById } from "../../component/redux/usersSlice";
 
 const Admin = () => {
   const dispatch = useDispatch();
-  const { user } = useSelector((state) => state.users);
-  const nameIdentifier = localStorage.getItem("nameIdentifier");
   const navigate = useNavigate();
+  const { user, userIdStatus } = useSelector((state) => state.users);
 
-  // Fetch user data after initial render
   useEffect(() => {
-    if (nameIdentifier) {
-      dispatch(fetchUserById(nameIdentifier));
+    if (userIdStatus === "idle") { 
+      dispatch(fetchUserById());
     }
-  }, [dispatch, nameIdentifier]);
-
-  // Navigate if the user has no roles
+  }, [dispatch, userIdStatus]);
+  
+  
   useEffect(() => {
-    if ( user.roles?.length === 0) {
-      navigate("/");
+    if (userIdStatus === "succeeded" && user) {
+      if (!user.roles?.includes("Admin") && !user.roles?.includes("CreatorCTF")) {
+        navigate("/", { replace: true });
+      }
     }
-  }, [user, navigate]);
-
-  if (user.roles?.length === 0) return null; 
+  }, [user, navigate,userIdStatus]);
+  
+  if (userIdStatus === "loading") {
+    return <Loading/>
+  }
 
   return (
     <div className={styles.adminPage}>

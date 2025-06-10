@@ -13,7 +13,7 @@ const AddChallenge = () => {
   const { competations, competationFilter } = useSelector(
     (state) => state.competation
   );
-
+  const nameIdentifier = localStorage.getItem("nameIdentifier");
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -39,8 +39,8 @@ const AddChallenge = () => {
       Level: "",
       Hent: "",
       HintValue: "",
-      CompetationId: null,
-      MinusValue: null,
+      CompetationId: "",
+      MinusValue: 0,
     },
   });
   const onSubmit = useCallback(
@@ -60,6 +60,7 @@ const AddChallenge = () => {
             formData.append(key, value);
           }
         });
+        formData.append("UserId", nameIdentifier)
 
         await instance.post("Challenge", formData, {
           headers: {
@@ -76,7 +77,7 @@ const AddChallenge = () => {
         setLoading(false);
       }
     },
-    [reset]
+    [reset,nameIdentifier]
   );
 
   return (
@@ -258,15 +259,13 @@ const AddChallenge = () => {
               )}
             </div>
             <div className={styles["inputGroup"]}>
-              <label htmlFor="file">Upload File</label>
+              <label htmlFor="file" >Upload File</label>
               <input
                 id="file"
                 type="file"
-                {...register("file", { required: "File is required" })}
+                multiple 
+                {...register("file", { required : false })}
               />
-              {errors.file && (
-                <p className={styles["error"]}>{errors.file.message}</p>
-              )}
             </div>
           </div>
           <div className={styles.image}>

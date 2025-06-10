@@ -31,28 +31,32 @@ const AddNotifications = () => {
 
   const onsubmit = async (data) => {
     try {
-      await instance.post("Notification", {
-        Title: data.title,
-        Content: data.Content,
-        competationId: data.competationId ? data.competationId : null,
-
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+      await instance.post(
+        "Notification",
+        {
+          Title: data.title,
+          Content: data.Content,
+          competationId: data.competationId || null,
         },
-      });
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+          },
+        }
+      );
 
       toast.success(
-        `${
-          data.competationId
-            ? "Notification added Successfully to Competation"
-            : "Notification added Successfully"
-        }`
+        data.competationId
+          ? "Notification added successfully to Competition"
+          : "Notification added successfully"
       );
+
       reset();
     } catch {
       toast.error("Failed to add notification");
     }
   };
+
   return (
     <div className={styles["notifications-container"]}>
       <div className="main-header">

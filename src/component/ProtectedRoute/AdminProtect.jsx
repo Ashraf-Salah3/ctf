@@ -1,30 +1,40 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUserById } from "../redux/usersSlice";
-import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
+import Loading from "../Loading/Loading";
 
 const AdminProtect = ({ children }) => {
   const dispatch = useDispatch();
-  const { user } = useSelector((state) => state.users);
+  const navigate = useNavigate();
+  const { user, userIdStatus } = useSelector((state) => state.users);
 
-
-  // Fetch user data after initial render
   useEffect(() => {
-    dispatch(fetchUserById());
-  }, [dispatch]);
+    if (userIdStatus === "idle") {
+      dispatch(fetchUserById());
+    }
+  }, [dispatch, userIdStatus]);
 
-  // Check if user is a CreatorCTF and set userIsCreator flag accordingly
+  useEffect(() => {
+    if (userIdStatus === "succeeded" && user) {
+      if (
+        !user.roles?.includes("Admin") &&
+        !user.roles?.includes("CreatorCTF")
+      ) {
+        navigate("/", { replace: true });
+      }
+    }
+  }, [user, navigate, userIdStatus]);
 
-  if (user?.roles?.[0] === "CreatorCTF") {
-    return <Navigate to="/admin" />;
+  if (userIdStatus === "loading") {
+    return <Loading />;
   }
-  return  children;
+
+  return children;
 };
 AdminProtect.propTypes = {
   children: PropTypes.node.isRequired,
-
-}
-
+};
 
 export default AdminProtect;

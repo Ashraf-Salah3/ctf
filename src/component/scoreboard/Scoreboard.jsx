@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { Line } from "react-chartjs-2";
-import { fetchUsers, setUserFilter } from "../redux/usersSlice";
 import styles from "./scoreboard.module.scss";
 import { GiTrophyCup } from "react-icons/gi";
 import {
@@ -22,12 +20,12 @@ import {
   TableHead,
   TableRow,
   Paper,
-  PaginationItem,
-  Pagination,
-  Stack,
 } from "@mui/material";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+/*import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";*/
+
+import { useQuery } from "@tanstack/react-query";
+import instance from "../../axios";
 import Loading from "../Loading/Loading";
 
 ChartJS.register(
@@ -41,15 +39,19 @@ ChartJS.register(
 );
 
 const Scoreboard = () => {
-  const dispatch = useDispatch();
-  const { users, userFilter, userStatus, totalPages } = useSelector(
-    (state) => state.users
-  );
-  const [usersSorted, setUsersSorted] = useState([]);
+  const {
+    data: users,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: "users",
+    queryFn: async () => {
+      const response = await instance.get("Account/users");
+      return response.data.data.items;
+    },
+  });
 
-  useEffect(() => {
-    dispatch(fetchUsers(userFilter));
-  }, [dispatch, userFilter]);
+  const [usersSorted, setUsersSorted] = useState([]);
 
   useEffect(() => {
     if (users?.length) {
@@ -125,18 +127,17 @@ const Scoreboard = () => {
     ],
   };
 
-  const handlePageChange = (event, page) => {
+  /* const handlePageChange = (event, page) => {
     dispatch(setUserFilter({ ...userFilter, PageIndex: page }));
-  };
+  };*/
+
+  if (isLoading) return <Loading />;
+  if (isError) return <p className="loading">Faild Please Try Again.</p>
 
   return (
     <div className={styles["scoreboard-container"]}>
-      <h2>Scoreboard</h2>
-      {userStatus === "loading" ? (
-        <Loading />
-      ) : userStatus === "failed" ? (
-        <p className="loading">Failed. Please check your connection.</p>
-      ) : users?.length > 0 ? (
+      <h1 className="main-heading">Scoreboard</h1>
+      {users?.length > 0 ? (
         <div className={styles["scoreboard-items"]}>
           <div className={styles.chart}>
             {usersSorted?.length > 0 ? (
@@ -191,9 +192,9 @@ const Scoreboard = () => {
                         </TableCell>
                         <TableCell>
                           <div className={styles["items"]}>
-                            <div className={styles.image}>
-                            <img src={user?.imageCover} alt="" />
-                            </div>
+                            {/* <div className={styles.image}>
+                              <img src={user?.imageCover} alt="" />
+                            </div> */}
                             <p>{user.displayName}</p>
                           </div>
                         </TableCell>
@@ -212,26 +213,28 @@ const Scoreboard = () => {
                   </TableBody>
                 </Table>
               </TableContainer>
-              <div className={styles.pagination}>
-                <Stack spacing={2}>
-                  <Pagination
-                    count={totalPages}
-                    page={userFilter?.PageIndex || 1}
-                    color="primary"
-                    onChange={handlePageChange}
-                    renderItem={(item) => (
-                      <PaginationItem
-                        sx={{ color: "white" }}
-                        slots={{
-                          previous: ArrowBackIcon,
-                          next: ArrowForwardIcon,
-                        }}
-                        {...item}
-                      />
-                    )}
-                  />
-                </Stack>
-              </div>
+              {/*totalPages > 1 && (
+                <div className={styles.pagination}>
+                  <Stack spacing={2}>
+                    <Pagination
+                      count={totalPages}
+                      page={userFilter?.PageIndex || 1}
+                      color="primary"
+                      onChange={handlePageChange}
+                      renderItem={(item) => (
+                        <PaginationItem
+                          sx={{ color: "white" }}
+                          slots={{
+                            previous: ArrowBackIcon,
+                            next: ArrowForwardIcon,
+                          }}
+                          {...item}
+                        />
+                      )}
+                    />
+                  </Stack>
+                </div>
+              )*/}
             </div>
           </div>
         </div>

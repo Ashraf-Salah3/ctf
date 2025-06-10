@@ -15,7 +15,6 @@ import { PaginationItem, Pagination, Stack } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import FiltersSidebar from "../FiltersSidebar/FiltersSidebar";
-import PropTypes from "prop-types";
 import Loading from "../Loading/Loading";
 import { motion } from "framer-motion";
 
@@ -24,7 +23,6 @@ const Challenge = () => {
   const [selectedChallenge, setSelectedChallenge] = useState(null);
   const [showHint, setShowHint] = useState(false);
   const [hintsShown, setHintsShown] = useState([]);
-  const [loading, setLoading] = useState(false);
   const { register, handleSubmit, reset } = useForm();
   const { challenges, challengeFilter, challengeStatus, totalPages } =
     useSelector((state) => state.challenge);
@@ -32,7 +30,13 @@ const Challenge = () => {
   const nameIdentifier = localStorage.getItem("nameIdentifier");
 
   useEffect(() => {
-    dispatch(fetchChallenges({ ...challengeFilter, UserId: nameIdentifier }));
+    dispatch(
+      fetchChallenges({
+        ...challengeFilter,
+        IsAccepted: true,
+        UserId: nameIdentifier,
+      })
+    );
     dispatch(fetchCategories());
   }, [dispatch, challengeFilter, nameIdentifier]);
 
@@ -54,9 +58,7 @@ const Challenge = () => {
       });
       if (response.data.data.status) {
         toast.success("Challenge Solved!");
-        dispatch(
-          fetchChallenges({ ...challengeFilter, UserId: nameIdentifier })
-        );
+        dispatch(fetchChallenges({ ...challengeFilter }));
         reset();
         closePopup();
       } else {
@@ -77,12 +79,12 @@ const Challenge = () => {
     setShowHint(true);
     setHintsShown((prevHints) => [...prevHints, selectedChallenge.id]);
     try {
-      await instance.post("/Challenge/showhint", {
+      await instance.post("Challenge/showhint", {
         challengeId: selectedChallenge.id,
         userId: nameIdentifier,
       });
     } catch {
-      return null;
+      toast.error("Failed to show hint. Please try again.");
     }
   };
 
@@ -91,26 +93,34 @@ const Challenge = () => {
       toast.error("No file to download");
       return;
     }
-    setLoading(true);
+
     try {
       const response = await instance.get("Challenge/download", {
         params: { link: imageUrl },
         responseType: "blob",
       });
+
+      const urlParts = imageUrl.split(".");
+      const extension =
+        urlParts.length > 1
+          ? urlParts[urlParts.length - 1].split("?")[0]
+          : "txt";
+      const fileName = `Credential.${extension}`;
+
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const a = document.createElement("a");
       a.href = url;
-      a.download = "Credential.txt";
+      a.download = fileName;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
       window.URL.revokeObjectURL(url);
-    } catch {
-      toast.error("Failed to Download");
-    } finally {
-      setLoading(false);
+    } catch (error) {
+      console.error("Download failed:", error.response?.data || error.message);
+      toast.error("Download failed, please try again.");
     }
   };
+
   const containerVariants = {
     hidden: { opacity: 1 },
     show: {
@@ -139,7 +149,7 @@ const Challenge = () => {
         ) : challenges?.length > 0 ? (
           <div className={styles.main}>
             <div className={styles.title}>
-              <h1>Challenges</h1>
+              <h1 className="main-heading">Challenges</h1>
             </div>
             <motion.div
               className={styles["challenges"]}
@@ -147,7 +157,7 @@ const Challenge = () => {
               initial="hidden"
               animate="show"
             >
-              {challenges?.map((challenge, index) => (
+              {challenges?.map((challenge) => (
                 <motion.div
                   key={challenge.id}
                   className={`${styles["box"]} ${
@@ -155,10 +165,6 @@ const Challenge = () => {
                   }`}
                   onClick={() => handleChallengeClick(challenge)}
                   variants={itemVariants}
-                  style={{
-                    animation: `fadeInUp 2s ease-in-out forwards`,
-                    animationDelay: `${5 * (index + 1)}s`,
-                  }}
                 >
                   <div className={styles["box-top"]}>
                     <p>{challenge.categoryName}</p>
@@ -245,6 +251,8 @@ const Challenge = () => {
                     {selectedChallenge.level}
                   </h4>
                   <p>{selectedChallenge.userSolverCounts} Users Solved</p>
+
+                  <p>👤 Author: {selectedChallenge?.userName}</p>
                 </div>
 
                 <div className={styles.items}>
@@ -255,28 +263,43 @@ const Challenge = () => {
                     </span>
                     {selectedChallenge.value}
                   </p>
-                  <p>
-                    {selectedChallenge.message}{" "}
-                    {selectedChallenge.attachmentUrl !==
-                      "https://ctfchallenge.runasp.net/files/Challanges/" && (
-                      <button
-                        className={styles["download-file"]}
-                        onClick={() =>
-                          handleDownload(selectedChallenge?.attachmentUrl)
-                        }
-                        disabled={loading}
-                      >
-                        download file
-                      </button>
-                    )}
-                  </p>
+                  
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      gap: "5px",
+                      flexWrap:"wrap"
+                    }}
+                  >
+                    {selectedChallenge.message}
+                    <div className={styles.file}>
+                    📂 Attachment:
+                    {Array.isArray(selectedChallenge.attachmentUrl) &&
+                      selectedChallenge.attachmentUrl.map(
+                        (attachment, index) => (
+                          <div key={index}>
+                            <button
+                              type="button"
+                              className={styles["download-file"]}
+                              onClick={() => handleDownload(attachment)}
+                            >
+                               File{index + 1}
+                            </button>
+                          </div>
+                        )
+                      )}
+                      </div>
+                  </div>
 
                   {!hintsShown.includes(selectedChallenge.id) && (
                     <button
+                      type="button"
                       onClick={handleShowHint}
                       className={styles["hint-btn"]}
                     >
-                      Hint For {selectedChallenge.hintValue} Points
+                      🕵 Hint For {selectedChallenge.hintValue} Points
                     </button>
                   )}
                 </div>
@@ -289,7 +312,7 @@ const Challenge = () => {
                     <input
                       id="Flag"
                       type="text"
-                      placeholder="Flag"
+                      placeholder="🏁 Flag"
                       {...register("Flag", { required: true })}
                     />
                   </div>
@@ -304,31 +327,6 @@ const Challenge = () => {
       )}
     </div>
   );
-};
-
-Challenge.propTypes = {
-  challenges: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.number.isRequired,
-      categoryName: PropTypes.string.isRequired,
-      level: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired,
-      value: PropTypes.number.isRequired,
-      isSolved: PropTypes.bool,
-      message: PropTypes.string,
-      attachmentUrl: PropTypes.string,
-      hint: PropTypes.string,
-      hintValue: PropTypes.number,
-      userSolverCounts: PropTypes.number,
-    })
-  ).isRequired,
-  challengeFilter: PropTypes.shape({
-    PageIndex: PropTypes.number,
-  }).isRequired,
-  totalPages: PropTypes.number.isRequired,
-  challengeStatus: PropTypes.oneOf(["loading", "failed", "succeeded"])
-    .isRequired,
-  userIsInCompetition: PropTypes.bool.isRequired,
 };
 
 export default Challenge;

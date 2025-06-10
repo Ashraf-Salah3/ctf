@@ -1,10 +1,11 @@
 
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import instance from "../../axios";
-const nameIdentifier = localStorage.getItem("nameIdentifier");
+
 const initialState = {
   users: [],
   userStatus: null,
+  userIdStatus: 'idle',
   userFilter: {
     PageIndex: 1,
     PageSize: 10,
@@ -33,19 +34,21 @@ const initialState = {
     }
   );
   
-
-export const fetchUserById = createAsyncThunk(
-  "users/fetchUserById",
-  async (_, { rejectWithValue }) => {
-    try {
-      const response = await instance.get(`Account/${nameIdentifier}`);
-      return response.data.data;
-    } catch (error) {
-      return rejectWithValue(error.message);
+  export const fetchUserById = createAsyncThunk(
+    "users/fetchUserById",
+    async (_, { rejectWithValue }) => {
+      try {
+        const nameIdentifier = localStorage.getItem("nameIdentifier");
+        
+        const response = await instance.get(`Account/${nameIdentifier}`);
+        return response.data.data;
+      } catch (error) {
+       
+        return rejectWithValue(error.response?.data || error.message);
+      }
     }
-  }
-)
-
+  );
+  
 const usersSlice = createSlice({
   name: "users",
   initialState,
@@ -68,9 +71,18 @@ const usersSlice = createSlice({
       .addCase(fetchUsers.rejected, (state) => {
         state.userStatus = "failed";
       })
-      .addCase(fetchUserById.fulfilled, (state,action) => {
-        state.user = action.payload;
+      .addCase(fetchUserById.pending, (state) => {
+        state.userIdStatus = "loading";
       })
+      .addCase(fetchUserById.fulfilled, (state, action) => {
+        state.user = action.payload;
+        state.userIdStatus = "succeeded";
+      })
+      .addCase(fetchUserById.rejected, (state) => {
+        state.userIdStatus = "failed";
+        state.user = null; 
+      });
+  
   },
 });
 

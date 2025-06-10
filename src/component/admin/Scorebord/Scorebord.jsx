@@ -6,19 +6,16 @@ import {
   TableHead,
   TableRow,
   Paper,
-  PaginationItem,
-  Pagination,
-  Stack,
 } from "@mui/material";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+// import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+// import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { useEffect } from "react";
 import { fetchUsers } from "../../redux/usersSlice";
 import { useDispatch, useSelector } from "react-redux";
 
 const Scorebord = () => {
   const dispatch = useDispatch();
-  const { users, userFilter, userStatus, totalPages } = useSelector(
+  const { users, userFilter, userStatus, } = useSelector(
     (state) => state.users
   );
 
@@ -26,9 +23,9 @@ const Scorebord = () => {
     dispatch(fetchUsers(userFilter));
   }, [dispatch, userFilter]);
 
-  const handlePageChange = (event, newPage) => {
-    dispatch(fetchUsers({ ...userFilter, pageIndex: newPage }));
-  };
+  // const handlePageChange = (event, newPage) => {
+  //   dispatch(fetchUsers({ ...userFilter, pageIndex: newPage }));
+  // };
 
   return (
     <div>
@@ -84,25 +81,27 @@ const Scorebord = () => {
                 </TableBody>
               </Table>
             </TableContainer>
-            <div>
-              <Stack spacing={2}>
-                <Pagination
-                  count={totalPages}
-                  page={userFilter?.PageIndex || 1}
-                  color="primary"
-                  onChange={handlePageChange}
-                  renderItem={(item) => (
-                    <PaginationItem
-                      slots={{
-                        previous: ArrowBackIcon,
-                        next: ArrowForwardIcon,
-                      }}
-                      {...item}
-                    />
-                  )}
-                />
-              </Stack>
-            </div>
+            {/* {totalPages > 1 && (
+              <div>
+                <Stack spacing={2}>
+                  <Pagination
+                    count={totalPages}
+                    page={userFilter?.PageIndex || 1}
+                    color="primary"
+                    onChange={handlePageChange}
+                    renderItem={(item) => (
+                      <PaginationItem
+                        slots={{
+                          previous: ArrowBackIcon,
+                          next: ArrowForwardIcon,
+                        }}
+                        {...item}
+                      />
+                    )}
+                  />
+                </Stack>
+              </div> }
+            )*/}
           </div>
         </div>
       ) : (

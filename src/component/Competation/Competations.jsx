@@ -15,14 +15,11 @@ import instance from "../../axios";
 import Loading from "../Loading/Loading";
 
 const Competitions = () => {
-  const [competitionIsStarted, setCompetitionIsStarted] = useState(false);
-  const [competitionIsEnded, setCompetitionIsEnded] = useState(false);
   const { competations, competationFilter, totalPages, competationStatus } =
     useSelector((state) => state.competation);
   const { userInteam } = useSelector((state) => state.checkUsers);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(null);
   const [webSite, setWebSite] = useState("");
-
   const nameIdentifier = localStorage.getItem("nameIdentifier");
 
   const dispatch = useDispatch();
@@ -32,12 +29,19 @@ const Competitions = () => {
   }, [dispatch, competationFilter]);
 
   useEffect(() => {
-    instance.get("Website", { params : {webiste: "competition" }}).then((res) => {
-      setWebSite(res.data.data.url);
-    });
-  }, []);
+    const fetchWebsite = async () => {
+      const response = await instance.get("Website", {
+        params: { webiste: "competition" },
+      });
 
-  console.log(webSite)
+      if (response.data.data === null) {
+        return;
+      }
+
+      setWebSite(response.data.data.url);
+    };
+    fetchWebsite();
+  }, []);
 
   const formatDateAndTimeLeft = useCallback((dateStr) => {
     const utcDate = new Date(dateStr);
@@ -61,28 +65,28 @@ const Competitions = () => {
 
   const handleJoinClick = async (id) => {
     try {
-      setLoading(true);
+      setLoading(id);
       const response = await instance.get(`Competation/${id}`);
+      let isEnded = false;
+      let isStarted = false;
+
       if (response.data.statusCode === 400) {
-        setCompetitionIsEnded(true);
+        isEnded = true;
       } else if (response.data.statusCode === 200) {
-        setCompetitionIsStarted(true);
+        isStarted = true;
       }
       await dispatch(checkUserInTeam(id)).unwrap();
-      setLoading(false);
-      setTimeout(() => {
-        if (competitionIsEnded) {
-          toast.info("Competition has ended.");
-          return;
-        } else if (competitionIsStarted && !userInteam) {
-          toast.info("Competition has already started.");
-        } else {
-          window.open(
-            `${webSite}/?id=${id}&userId=${nameIdentifier}`,
-            "_blank"
-          );
-        }
-      }, 100);
+      setLoading(null);
+      if (isEnded) {
+        toast.info("Competition has ended.");
+        return;
+      }
+
+      if (isStarted && !userInteam) {
+        toast.info("Competition has already started.");
+      } else {
+        window.open(`${webSite}/?id=${id}&userId=${nameIdentifier}`, "_blank");
+      }
     } catch {
       toast.error("Something went wrong.");
     }
@@ -96,13 +100,12 @@ const Competitions = () => {
         <p className="loading">Failed. Please check your connection.</p>
       ) : competations.length > 0 ? (
         <div className="container">
-          <h1>Competitions</h1>
+          <h1 className="main-heading">Competitions</h1>
           <div className={styles["competitions"]}>
             {competations?.map((competition) => {
               const { formattedDate, timeLeft } = formatDateAndTimeLeft(
                 competition.startDate
               );
-
               return (
                 <div
                   key={competition.id}
@@ -122,14 +125,14 @@ const Competitions = () => {
                     <img src={competition.attachment} alt="Competition" />
                   </div>
                   <h3>{competition.name}</h3>
-                  <p>{competition.description}</p>
+                  <p className={styles.desc}>{competition.description}</p>
                   <p className={styles.date}>{formattedDate}</p>
                   <div className={styles["competition-join"]}>
                     <button
                       onClick={() => handleJoinClick(competition.id)}
                       disabled={loading}
                     >
-                      {loading ? "loading" : "Join"}
+                      {loading === competition.id ? "loading" : "Join"}
                     </button>
                     <p>{timeLeft}</p>
                   </div>
@@ -137,22 +140,27 @@ const Competitions = () => {
               );
             })}
           </div>
-          <div className={styles.pagination}>
-            <Stack spacing={2}>
-              <Pagination
-                count={totalPages}
-                page={competationFilter?.PageIndex || 1}
-                color="primary"
-                onChange={handlePageChange}
-                renderItem={(item) => (
-                  <PaginationItem
-                    slots={{ previous: ArrowBackIcon, next: ArrowForwardIcon }}
-                    {...item}
-                  />
-                )}
-              />
-            </Stack>
-          </div>
+          {totalPages > 1 && (
+            <div className={styles.pagination}>
+              <Stack spacing={2}>
+                <Pagination
+                  count={totalPages}
+                  page={competationFilter?.PageIndex || 1}
+                  color="primary"
+                  onChange={handlePageChange}
+                  renderItem={(item) => (
+                    <PaginationItem
+                      slots={{
+                        previous: ArrowBackIcon,
+                        next: ArrowForwardIcon,
+                      }}
+                      {...item}
+                    />
+                  )}
+                />
+              </Stack>
+            </div>
+          )}
         </div>
       ) : (
         <p className="loading">No results found.</p>

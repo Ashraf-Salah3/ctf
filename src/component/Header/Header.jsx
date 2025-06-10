@@ -90,8 +90,8 @@ const Header = () => {
                     </NavLink>
                   </li>
                 <li>
-                  <NavLink to="/competations" className={activeLink}>
-                    Competations{" "}
+                  <NavLink to="/competitions" className={activeLink}>
+                    Competitions{" "}
                   </NavLink>
                 </li>
               </ul>
@@ -101,7 +101,7 @@ const Header = () => {
             <NavLink to="/notification">
               <div className={styles.notification}>
                 <RiNotification2Fill size={22} />
-                <span>{count}</span>
+                <span style={{color:"red"}}>{count}</span>
               </div>
             </NavLink>
 

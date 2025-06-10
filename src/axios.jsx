@@ -1,7 +1,5 @@
 import axios from "axios";
-
 export const DEV_BASE_URL = "https://ctfchallenge.runasp.net";
-
 
 const instance = axios.create({
   baseURL: DEV_BASE_URL + "/api/",

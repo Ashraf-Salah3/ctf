@@ -1,9 +1,10 @@
-import { Fragment, useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import "./App.css";
 import Header from "./component/Header/Header";
 import Login from "./pages/auth/Login";
 import {
   createBrowserRouter,
+  Navigate,
   Outlet,
   RouterProvider,
   useLocation,
@@ -12,7 +13,6 @@ import Register from "./pages/auth/Register";
 import Challenge from "./component/Challenge/Challenge";
 import Admin from "./pages/admin/Admin";
 import UsersList from "./component/admin/users/UsersList";
-import AdminDashboard from "./component/admin/AdminDashboard/AdminDashboard";
 import Scorebord from "./component/admin/Scorebord/Scorebord";
 import Challengs from "./component/admin/challengs/Challengs";
 import Submissions from "./component/admin/submissions/Submissions";
@@ -39,27 +39,34 @@ import Footer from "./component/Footer/Footer";
 import AppErrorBoundary from "./ErrorBoundary";
 import NotFound from "./component/notFound/NotFound";
 import AdminProtect from "./component/ProtectedRoute/AdminProtect";
+import { useSelector } from "react-redux";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const Layout = () => {
   const location = useLocation();
   const isAdminRoute = location.pathname.startsWith("/admin");
-
+  const queryClient = new QueryClient();
   return (
-    <Fragment>
+    <QueryClientProvider client={queryClient}>
       <Toaster richColors position="top-center" />
       {!isAdminRoute && <Header />}
       <Outlet />
       {!isAdminRoute && <Footer />}
-    </Fragment>
+    </QueryClientProvider>
   );
 };
 
 function App() {
+  const { user } = useSelector((state) => state.users);
   useEffect(() => {
     if (window.self !== window.top) {
       window.top.location.href = window.location.href;
     }
   }, []);
+  const userIsCreator = useMemo(
+    () => user?.roles?.includes("CreatorCTF"),
+    [user?.roles]
+  );
 
   const router = createBrowserRouter([
     {
@@ -104,7 +111,7 @@ function App() {
         },
 
         {
-          path: "/competations",
+          path: "/competitions",
           element: (
             <ProtectedRoute>
               <Competations />
@@ -139,34 +146,29 @@ function App() {
         {
           path: "/admin",
           element: (
-            <ProtectedRoute>
+            <AdminProtect>
               <Admin />
-            </ProtectedRoute>
+            </AdminProtect>
           ),
           children: [
             {
-              path: "adminDashboard",
-              element: <AdminDashboard />,
-            },
-            {
               path: "users",
-              element: (
-                <AdminProtect>
-                  {" "}
-                  <UsersList />
-                </AdminProtect>
+              element: !userIsCreator ? (
+                <UsersList />
+              ) : (
+                <Navigate to="/admin" />
               ),
             },
             {
               path: "scorebord",
-              element: (
-                <AdminProtect>
-                  <Scorebord />
-                </AdminProtect>
+              element: !userIsCreator ? (
+                <Scorebord />
+              ) : (
+                <Navigate to="/admin" />
               ),
             },
             {
-              path: "challengs",
+              path: "challenges",
               element: <Challengs />,
             },
             {
@@ -174,7 +176,7 @@ function App() {
               element: <AddChallenge />,
             },
             {
-              path: "edit-challenge",
+              path: "edit-challenge/:id",
               element: <EditChallenge />,
             },
             {
@@ -183,59 +185,55 @@ function App() {
             },
             {
               path: "competition",
-              element: (
-                <AdminProtect>
-                  <Competition />
-                </AdminProtect>
+              element: !userIsCreator ? (
+                <Competition />
+              ) : (
+                <Navigate to="/admin" />
               ),
             },
             {
               path: "addCompetition",
-              element: (
-                <AdminProtect>
-                  <AddCompetition />
-                </AdminProtect>
+              element: !userIsCreator ? (
+                <AddCompetition />
+              ) : (
+                <Navigate to="/admin" />
               ),
             },
             {
               path: "edit-competition",
-              element: (
-                <AdminProtect>
-                  <EditCompetition />
-                </AdminProtect>
+              element: !userIsCreator ? (
+                <EditCompetition />
+              ) : (
+                <Navigate to="/admin" />
               ),
             },
             {
               path: "submissions",
-              element: (
-                <AdminProtect>
-                  <Submissions />
-                </AdminProtect>
+              element: !userIsCreator ? (
+                <Submissions />
+              ) : (
+                <Navigate to="/admin" />
               ),
             },
             {
               path: "notifications",
-              element: (
-                <AdminProtect>
-                  <Notifications />
-                </AdminProtect>
+              element: !userIsCreator ? (
+                <Notifications />
+              ) : (
+                <Navigate to="/admin" />
               ),
             },
             {
               path: "addnotification",
-              element: (
-                <AdminProtect>
-                  <AddNotifications />
-                </AdminProtect>
+              element: !userIsCreator ? (
+                <AddNotifications />
+              ) : (
+                <Navigate to="/admin" />
               ),
             },
             {
               path: "account",
-              element: (
-                <AdminProtect>
-                  <Account />
-                </AdminProtect>
-              ),
+              element: !userIsCreator ? <Account /> : <Navigate to="/admin" />,
             },
           ],
         },

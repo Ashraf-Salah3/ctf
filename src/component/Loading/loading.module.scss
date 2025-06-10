@@ -7,8 +7,21 @@
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    span {
-      color: var(--accent) !important;
+    svg {
+      width: 3.75rem; // Tailwind's w-15 = 60px = 3.75rem
+      height: 3.75rem; // h-15
+      color: #e5e7eb; // Tailwind's text-gray-200
+      fill: #2563eb; // Tailwind's fill-blue-600
+      animation: spin 1s linear infinite;
+
+      @media (prefers-color-scheme: dark) {
+        color: #4b5563; // Tailwind's dark:text-gray-600
+      }
     }
+  }
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
   }
 }

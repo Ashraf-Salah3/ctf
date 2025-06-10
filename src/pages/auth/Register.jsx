@@ -71,8 +71,8 @@ const Register = () => {
       });
       navigate("/login");
       reset();
-    } catch (error) {
-      toast.error(error.response.data.errors[0] || "An error occurred");
+    } catch {
+      toast.error( "Faild Please Try Again");
     }
   };
   if (isAuthenticated) {
@@ -264,11 +264,12 @@ const Register = () => {
             >
               <label htmlFor="file">upload Image</label>
               <input
-                type="file"
-                id="file"
-                accept="image/*"
-                {...register("file", { required: "Image Is Requierd" })}
-              />
+  type="file"
+  id="file"
+  accept=".png, .jpeg, .jpg"
+  {...register("file", { required: "Image is required" })}
+/>
+
               {errors.file && (
                 <p className={styles["error-text"]}>{errors.file.message}</p>
               )}
