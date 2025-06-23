@@ -6,11 +6,11 @@ import { IoPerson } from "react-icons/io5";
 import { toast } from "sonner";
 import { useForm } from "react-hook-form";
 import instance from "../../axios";
-import { useEffect, useState } from "react";
-import axios from "axios";
+// import { useEffect, useState } from "react";
+// import axios from "axios";
 
 const Register = () => {
-  const [countries, setCountries] = useState([]);
+  // const [countries, setCountries] = useState([]);
   const isAuthenticated = localStorage.getItem("authToken");
   const navigate = useNavigate();
 
@@ -32,28 +32,28 @@ const Register = () => {
     },
   });
 
-  useEffect(() => {
-    axios.get("https://restcountries.com/v3.1/all").then((response) => {
-      const countryOptions = response.data
-        .map((country) => ({
-          label: country.name.common,
-          value: country.cca2,
-        }))
-        .sort((a, b) => a.label.localeCompare(b.label));
-      setCountries(countryOptions);
-    });
-  }, []);
+  // useEffect(() => {
+  //   axios.get("https://restcountries.com/v3.1/all").then((response) => {
+  //     const countryOptions = response.data
+  //       .map((country) => ({
+  //         label: country.name.common,
+  //         value: country.cca2,
+  //       }))
+  //       .sort((a, b) => a.label.localeCompare(b.label));
+  //     setCountries(countryOptions);
+  //   });
+  // }, []);
 
 
   const handleFormSubmit = async (data) => {
-    const { firstName, lastName, email, password, confirmPassword, country, file } =
+    const { firstName, lastName, email, password, confirmPassword, /*country*/ file } =
       data;
 
     if (password !== confirmPassword) {
       toast.error("Passwords do not match.");
       return;
     }
-    const countryName = countries.find((c) => c.value === country)?.label;
+    // const countryName = countries.find((c) => c.value === country)?.label;
     const formData = new FormData();
     formData.append("FirstName", firstName);
     formData.append("LastName", lastName);
@@ -61,7 +61,7 @@ const Register = () => {
     formData.append("Password", password);
     formData.append("ConfirmPassword", confirmPassword);
     formData.append("Image", file[0]);
-    formData.append("Country", countryName);
+    formData.append("Country", "Egypt");
 
     try {
       await instance.post("Account/register", formData, {
@@ -202,7 +202,7 @@ const Register = () => {
               )}
             </div>
 
-            {/* Country */}
+            {/* Country 
             <div
               className={
                 errors.country
@@ -226,7 +226,7 @@ const Register = () => {
               {errors.country && (
                 <p className={styles["error-text"]}>{errors.country.message}</p>
               )}
-            </div>
+            </div>*/}
 
             {/* Confirm Password */}
             <div

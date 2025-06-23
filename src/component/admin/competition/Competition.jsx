@@ -39,11 +39,18 @@ const Competition = () => {
 
   const handleDelete = async (id) => {
     try {
+      const token = localStorage.getItem("authToken");
+      if (!token) {
+        toast.error("Unauthorized: No token found");
+        return;
+      }
+
       await instance.delete(`Competation/${id}`, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+          Authorization: `Bearer ${token}`,
         },
       });
+
       toast.success("Deleted Successfully");
       dispatch(fetchCompetations(competationFilter));
     } catch {

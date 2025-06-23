@@ -14,11 +14,6 @@
     max-width: 100%;
     position: relative;
   }
-
-  
-.title{
-  margin-bottom: 4rem;
-}
   
 
   .challenges {
@@ -168,7 +163,10 @@
         display: flex;
         flex-direction: column;
         gap: 10px;
-
+h2{
+  font-size: 25px;
+  font-weight: bold;
+}
         .value {
           margin-bottom: 10px;
           font-size: 20px;
