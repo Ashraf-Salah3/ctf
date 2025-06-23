@@ -19,7 +19,7 @@ const Competitions = () => {
     useSelector((state) => state.competation);
   const { userInteam } = useSelector((state) => state.checkUsers);
   const [loading, setLoading] = useState(null);
-  const [webSite, setWebSite] = useState("");
+  // const [webSite, setWebSite] = useState("");
   const nameIdentifier = localStorage.getItem("nameIdentifier");
 
   const dispatch = useDispatch();
@@ -28,20 +28,20 @@ const Competitions = () => {
     dispatch(fetchCompetations(competationFilter));
   }, [dispatch, competationFilter]);
 
-  useEffect(() => {
-    const fetchWebsite = async () => {
-      const response = await instance.get("Website", {
-        params: { webiste: "competition" },
-      });
+  // useEffect(() => {
+  //   const fetchWebsite = async () => {
+  //     const response = await instance.get("Website", {
+  //       params: { webiste: "competition" },
+  //     });
 
-      if (response.data.data === null) {
-        return;
-      }
+  //     if (response.data.data === null) {
+  //       return;
+  //     }
 
-      setWebSite(response.data.data.url);
-    };
-    fetchWebsite();
-  }, []);
+  //     setWebSite(response.data.data.url);
+  //   };
+  //   fetchWebsite();
+  // }, []);
 
   const formatDateAndTimeLeft = useCallback((dateStr) => {
     const utcDate = new Date(dateStr);
@@ -85,7 +85,7 @@ const Competitions = () => {
       if (isStarted && !userInteam) {
         toast.info("Competition has already started.");
       } else {
-        window.open(`${webSite}/?id=${id}&userId=${nameIdentifier}`, "_blank");
+        window.open(`https://spider-competition.vercel.app/?id=${id}&userId=${nameIdentifier}`, "_blank");
       }
     } catch {
       toast.error("Something went wrong.");
